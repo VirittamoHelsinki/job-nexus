@@ -1,0 +1,12 @@
+/* Webfont: HelsinkiGrotesk-Black */@font-face {
+    font-family: 'HelsinkiGroteskBlack';
+    src: url('HelsinkiGrotesk-Black.eot'); /* IE9 Compat Modes */
+    src: url('HelsinkiGrotesk-Black.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('HelsinkiGrotesk-Black.woff') format('woff'), /* Modern Browsers */
+         url('HelsinkiGrotesk-Black.ttf') format('truetype'), /* Safari, Android, iOS */
+         url('HelsinkiGrotesk-Black.svg#HelsinkiGrotesk-Black') format('svg'); /* Legacy iOS */
+    font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+
