@@ -8,6 +8,7 @@ const jobSchema = new mongoose.Schema({
   skills: [String], //skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
   link: String,
   deadline: String,
+  team: String,
 });
 
 const Job = mongoose.model('Job', jobSchema);

@@ -1,3 +1,4 @@
+
 // controllers/jobController.js
 const Job = require('../models/jobModel');
 
@@ -34,8 +35,8 @@ const getAvailableJobs = async (req, res) => {
 const createJob = async (req, res) => {
   try {
     // Create a new job
-    const { company, role, skills, link, deadline } = req.body;
-    const job = new Job({ company, role, skills, link, deadline });
+    const { company, role, skills, link, deadline, team } = req.body;
+    const job = new Job({ company, role, skills, link, deadline, team });
     const savedJob = await job.save();
     res.status(201).json(savedJob);
   } catch (error) {
