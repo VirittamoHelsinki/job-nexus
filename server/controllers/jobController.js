@@ -1,10 +1,8 @@
-
 // controllers/jobController.js
 const Job = require('../models/jobModel');
 
 const getAllJobs = async (req, res) => {
   try {
-    // Retrieve all jobs
     const jobs = await Job.find();
     res.json(jobs);
   } catch (error) {
@@ -14,7 +12,6 @@ const getAllJobs = async (req, res) => {
 
 const getAvailableJobs = async (req, res) => {
   try {
-    // Retrieve all jobs
     const jobs = await Job.find();
 
     // Filter jobs to get only available ones
@@ -58,10 +55,44 @@ const getJobById = async (req, res) => {
   }
 };
 
+const updateJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    const update = req.body;
+
+    // Update the job with the given ID and return the updated document
+    const job = await Job.findByIdAndUpdate(jobId, update, { new: true });
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.json(job);
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating job' });
+  }
+};
+
+const deleteJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+
+    const job = await Job.findByIdAndDelete(jobId);
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    res.json({ message: 'Job successfully deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting job' });
+  }
+};
+
 // Export the controller functions
 module.exports = {
   getAllJobs,
   createJob,
   getJobById,
   getAvailableJobs,
+  updateJob,
+  deleteJob,
 };

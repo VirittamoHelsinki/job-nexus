@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import JobDetail from './JobDetail';
 import { formatDate, getColorClass } from '../utils/dateUtils';
 
-const JobTable = ({ data }) => {
+const JobTable = ({ data, onDelete, onEdit }) => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [showExpiredJobs, setShowExpiredJobs] = useState(true);
+  
+  const isAdmin = true; //Change this later on depending on the user role.
 
   const openJobDetail = (job) => {
     setSelectedJob(job);
@@ -16,6 +18,16 @@ const JobTable = ({ data }) => {
 
   const handleLinkClick = (event) => {
     event.stopPropagation();
+  };
+
+  const handleDelete = (jobId, event) => {
+    event.stopPropagation(); // Prevents opening job details when clicking delete
+    onDelete(jobId);
+  };
+
+  const handleEdit = (job, event) => {
+    event.stopPropagation(); // Prevents opening job details when clicking edit
+    onEdit(job);
   };
 
   // Filter jobs with deadlines that haven't passed
@@ -48,6 +60,7 @@ const JobTable = ({ data }) => {
             <th>Taitovaatimukset</th>
             <th>Ilmoitus</th>
             <th>Viim. hakupäivä</th>
+            {isAdmin && (<><th></th><th></th></>)}
           </tr>
         </thead>
         <tbody>
@@ -62,6 +75,16 @@ const JobTable = ({ data }) => {
                 </a>
               </td>
               <td>{formatDate(job.deadline)}</td>
+              {isAdmin && (
+              <>
+                <td>
+                  <button className='button orange-button' onClick={(event) => handleEdit(job, event)}>Muokkaa</button>
+                </td>
+                <td>
+                  <button className='button red-button' onClick={(event) => handleDelete(job._id, event)}>Poista</button>
+                </td>
+              </>
+            )}
             </tr>
           ))}
         </tbody>
