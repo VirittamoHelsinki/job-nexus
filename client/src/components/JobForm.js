@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import config from '../config';
 
-const initialSkills = ['React', 'MongoDB', 'Node.js', 'Express', 'Python', 'C#'];
+//const initialSkills = ['React', 'MongoDB', 'Node.js', 'Express', 'Python', 'C#'];
 
 function JobForm() {
   const [company, setCompany] = useState('');
@@ -12,7 +12,33 @@ function JobForm() {
   const [selectedTeam, setSelectedTeam] = useState('');
   const [newSkill, setNewSkill] = useState('');
 
-  const [availableSkills, setAvailableSkills] = useState(initialSkills);
+  //const [availableSkills, setAvailableSkills] = useState(initialSkills);
+  const [skills, setSkills] = useState([]);
+  const [availableSkills, setAvailableSkills] = useState([]);
+
+  useEffect(() => {
+    fetch(config.apiUrl + '/api/jobs')
+      .then(response => response.json())
+      .then(jobs => {
+        const skillCounts = {};
+        
+        jobs.forEach(job => {
+          // Include job's skills only if the team matches or if no team is selected
+          if (selectedTeam === '' || job.team === selectedTeam) {
+            job.skills.forEach(skill => {
+              skillCounts[skill] = (skillCounts[skill] || 0) + 1;
+            });
+          }
+        });
+
+        const sortedSkills = Object.entries(skillCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(entry => entry[0]);
+
+        setAvailableSkills(sortedSkills);
+      })
+      .catch(error => console.error('Error fetching skills:', error));
+  }, [selectedTeam]); // Dependency array includes selectedTeam
 
   const handleSkillButtonClick = (skill) => {
     setSelectedSkills([...selectedSkills, skill]);
@@ -28,7 +54,7 @@ function JobForm() {
 
   const removeSkill = (skill) => {
     setSelectedSkills(selectedSkills.filter(item => item !== skill));
-    if (initialSkills.includes(skill)) {
+    if (availableSkills.includes(skill)) {
       setAvailableSkills([...availableSkills, skill]);
     }
   };
