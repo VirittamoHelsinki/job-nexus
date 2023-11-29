@@ -13,15 +13,18 @@ function App() {
   const [data, setData] = useState([]);
   const [selectedTeam, setSelectedTeam] = useState('All');
 
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch(config.apiUrl + '/api/jobs');
+      const data = await response.json();
+      setData(data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    }
+  };
+
   useEffect(() => {
-    fetchData(config.apiUrl + '/api/jobs')
-      .then((result) => {
-        setData(result);
-        console.log(result);
-      })
-      .catch((error) => {
-        // Handle errors
-      });
+    fetchJobs();
   }, []);
 
   // Function to filter job ads based on the selected team.
@@ -90,7 +93,11 @@ function App() {
             </div>
             <JobTable data={filterJobsByTeam(selectedTeam)} onDelete={onDelete} onEdit={onEdit} /> {/* Pass the filtered data */}
           </div>
-          {isJobFormVisible && <div className="right"><JobForm /></div>}
+          {isJobFormVisible && (
+            <div className="right">
+              <JobForm editingJob={editingJob} onJobSubmit={fetchJobs} />
+            </div>
+          )}
           {isAnalyticsOpen && <Analytics data={filterJobsByTeam(selectedTeam)} onClose={toggleAnalytics} />}
         </div>
       </div>
